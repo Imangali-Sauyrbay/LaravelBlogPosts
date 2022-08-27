@@ -1,1 +1,1 @@
-<p>Nothing posted yet!</p>
+<p>Nothing added yet!</p>

@@ -9,7 +9,7 @@
     @yield('head')
 </head>
 <body>
-    <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
+    <div class="d-flex flex-column flex-md-row justify-content-md-between align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
         <h5 class="my-0 my-md-auto font-weight-normal">Laravel Blog</h5>
         <nav class="my-2 my-md-0 mr-md-3">
             <a href="{{route('root')}}" class="p-2 text-dark">Main</a>
@@ -21,11 +21,17 @@
 
     <main class="container">
          @if (session()->has('status'))
-            <h5 style="text-align: center; color: lightgreen;">{{ session()->get('status') }}</h5>
+            <h5 id="status" style="text-align: center; color: lightgreen;">{{ session()->get('status') }}</h5>
         @endif
         @yield('main')
     </main>
 
     @yield('scripts')
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            var statusBar = document.getElementById('status');
+            if(statusBar) setTimeout(() => statusBar.parentElement.removeChild(statusBar), 5000);
+        })
+    </script>
 </body>
 </html>

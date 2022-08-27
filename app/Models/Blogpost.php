@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
+use League\CommonMark\Normalizer\SlugNormalizer;
 
 class Blogpost extends Model
 {
@@ -28,9 +28,16 @@ class Blogpost extends Model
     }
 
     public static function getSlug(string $str) {
-        mb_regex_encoding('UTF-8');
-        $str = mb_ereg_replace('[^A-Za-z0-9А-Яа-яЁё\- ]+', '', $str);
-        return Str::lower(mb_ereg_replace('\s+', '-', $str)) . uniqid('-', true);
+        return (new SlugNormalizer())->normalize($str) . uniqid('-');
     }
 
+    public function author()
+    {
+        return $this->belongsTo(Author::class);
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
 }

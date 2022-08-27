@@ -5,7 +5,7 @@
 		form {
 			display: flex;
 			flex-direction: column;
-			width: 40%;
+			width: 60%;
 			margin: auto;
 		}
 
@@ -35,9 +35,9 @@
 @section('main')
 	<form method="POST" action="{{ route('posts.store') }}">
 		@csrf
-		<input type="text" name="title" placeholder="Title" value="{{ old('title') }}">
-		<textarea name="content" cols="30" rows="10" placeholder="Content">{{ old('content') }}</textarea>
+		<input class="form-control" type="text" name="title" placeholder="Title" value="{{ old('title') }}">
+		<textarea class="form-control" name="content" cols="30" rows="10" placeholder="Content">{{ old('content') }}</textarea>
 		@include('posts.components.error-list')
-		<button type="submit">Create</button>
+		<button class="btn btn-primary" type="submit">Create</button>
 	</form>
 @endsection

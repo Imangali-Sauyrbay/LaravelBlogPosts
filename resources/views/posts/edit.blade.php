@@ -5,7 +5,7 @@
 		form {
 			display: flex;
 			flex-direction: column;
-			width: 40%;
+			width: 60%;
 			margin: auto;
 		}
 
@@ -37,12 +37,14 @@
 		@csrf
 		@method('put')
 		<input
+		class="form-control"
 		type="text"
 		name="title"
 		placeholder="Title"
 		value="{{ old('title', $post->title) }}">
 
 		<textarea
+		class="form-control"
 		name="content"
 		cols="30"
 		rows="10"
@@ -51,11 +53,11 @@
 	--}}</textarea>
 
 		@include('posts.components.error-list')
-		<button type="submit">Save</button>
+		<button type="submit" class="btn btn-outline-success">Save</button>
 	</form>
 	<form action="{{ route('posts.destroy', ['post' => $post->slug]) }}" method="POST">
 		@csrf
 		@method('DELETE')
-		<button type="submit" style="color: red;">Delete Post</button>
+		<button type="submit" class="btn btn-danger">Delete Post</button>
 	</form>
 @endsection
