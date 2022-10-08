@@ -15,7 +15,16 @@
             <a href="{{route('root')}}" class="p-2 text-dark">Main</a>
             <a href="{{route('contacts')}}" class="p-2 text-dark">Contacts</a>
             <a href="{{route('posts.index')}}" class="p-2 text-dark">Posts</a>
-            <a href="{{route('posts.create')}}" class="p-2 text-dark">New Post</a>
+            <a href="{{route('posts.create')}}" class="p-2 text-dark">New Post</a>|
+            @auth
+                <form method="POST" action="{{route('logout')}}">
+                    @csrf
+                    <button type="submit" class="btn p-2 text-dark text-decoration-underline">Logout ({{ auth()->user()->name }})</button>
+                </form>
+            @else
+                <a href="{{route('register')}}" class="p-2 text-dark">Sign up</a>
+                <a href="{{route('login')}}" class="p-2 text-dark">Sign in</a>
+            @endauth
         </nav>
     </div>
 
@@ -28,10 +37,10 @@
 
     @yield('scripts')
     <script>
-        window.addEventListener('DOMContentLoaded', () => {
-            var statusBar = document.getElementById('status');
-            if(statusBar) setTimeout(() => statusBar.parentElement.removeChild(statusBar), 5000);
-        })
+        window.addEventListener('DOMContentLoaded', function () {
+	        var statusBar = document.getElementById('status');
+	        if(statusBar) setTimeout(function () { statusBar.parentElement.removeChild(statusBar)}, 5000);
+	    })
     </script>
 </body>
 </html>
