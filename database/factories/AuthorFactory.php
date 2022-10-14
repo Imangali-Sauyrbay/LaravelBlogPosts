@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\Author;
 use App\Models\Profile;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Author>
@@ -19,7 +20,11 @@ class AuthorFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'name' => fake()->name(),
+            'email' => fake()->safeEmail(),
+            'email_verified_at' => now(),
+            'password' => bcrypt('qwerty123'), // password
+            'remember_token' => Str::random(10),
         ];
     }
 

@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Blogpost;
 use App\Http\Requests\StorePostRequest;
+use DB;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Session;
 
 class PostController extends Controller
 {
@@ -14,7 +17,8 @@ class PostController extends Controller
 
     public function index()
     {
-        return view('posts.index', ['posts' => Blogpost::orderBy('created_at', 'desc')->get()]);
+        $post = Blogpost::with(['comments', 'comments.author'])->orderBy('created_at', 'desc')->get();
+        return view('posts.index', ['posts' => $post]);
     }
 
     public function create()
@@ -34,14 +38,14 @@ class PostController extends Controller
         $data['slug'] = Blogpost::getSlug($data['title']);
         Blogpost::create($data);
 
-        $request->session()->flash('status', 'new blogpost was created');
-
+        Session::flash('status', 'new blogpost was created');
 
         return redirect()->route('posts.show', ['post' => $data['slug']]);
     }
 
-    public function show(Blogpost $post)
+    public function show($slug)
     {
+        $post = Blogpost::with(['comments', 'comments.author'])->where('slug', '=', $slug)->first();
         return view('posts.show', ['post' => $post]);
     }
 
@@ -65,13 +69,15 @@ class PostController extends Controller
      */
     public function update(StorePostRequest $request, Blogpost $post)
     {
+        $this->authorize('update', $post);
+
         $data = $request->validated();
         $data['slug'] = Blogpost::getSlug($data['title']);
 
         $post->fill($data);
         $post->save();
 
-        $request->session()->flash('status', 'blogpost was updated');
+        Session::flash('status', 'blogpost was updated');
 
         return redirect()->route('posts.show', ['post' => $data['slug']]);
     }

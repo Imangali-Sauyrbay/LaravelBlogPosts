@@ -4,7 +4,10 @@
         <hr>
         <pre style="margin: 3px; width: 100%; word-break: break-all; white-space: pre-wrap; word-wrap: break-word;">{{ mb_strcut($post->content, 0, 200) . '...' }}</pre>
         <hr>
-        <p>{{ $post->created_at->diffForHumans() }}</p>
+        <div class="d-flex align-content-center justify-content-between">
+        <span>{{ $post->created_at->diffForHumans() }}</span>
+        <span>Comments ({{ $post->comments->count() }})</span>
+        </div>
         @if (now()->diffInMinutes($post->created_at) < 15)
             <strong>NEW!</strong>
         @endif
