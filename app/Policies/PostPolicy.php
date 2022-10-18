@@ -11,20 +11,15 @@ class PostPolicy
 {
     use HandlesAuthorization;
 
-    /**
-     * Create a new policy instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        //
-    }
-
     public function update(Author $user, Blogpost $post)
     {
-        return $user->id == $post->author()->first()->id
+        return $user->id == $post->author_id
                 ? Response::allow()
                 : Response::deny('You do not own this post.');
+    }
+
+    public function delete(Author $user, Blogpost $post)
+    {
+        return $this->update($user, $post);
     }
 }

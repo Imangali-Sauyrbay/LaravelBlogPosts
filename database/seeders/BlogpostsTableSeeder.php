@@ -18,12 +18,17 @@ class BlogpostsTableSeeder extends Seeder
     {
         $authors = Author::all();
 
-        $posts = Blogpost::factory(50)->make()
+        if($authors->count() <= 0) {
+            $this->command->error('There is no Authors, so posts won\'t be added!');
+            return;
+        }
+
+        $postsCount = max((int) $this->command->ask('How many posts should be added?', 50), 0);
+
+        Blogpost::factory($postsCount)->make()
         ->each(function($post) use($authors) {
             $post['author_id'] = $authors->random()['id'];
             $post->save();
         });
-
-
     }
 }

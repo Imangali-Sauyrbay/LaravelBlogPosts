@@ -13,10 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('profiles', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-            $table->foreignIdFor('App\Models\Author', 'author_id')->constrained()->cascadeOnDelete();
+        Schema::table('authors', function (Blueprint $table) {
+            $table->softDeletes();
         });
     }
 
@@ -27,6 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('profiles');
+        Schema::table('authors', function (Blueprint $table) {
+            $table->dropSoftDeletes();
+        });
     }
 };

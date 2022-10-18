@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Author;
 use App\Models\Blogpost;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -24,11 +25,10 @@ class PostsTest extends TestCase
 
     public function test_if_a_new_post_adding_is_working_correctly()
     {
-        $post = Blogpost::create([
-            'title' => 'new title',
-            'content' => 'some content'
-        ]);
-        $post->setSlug()->save();
+
+        $data = $this->getBlogpostWithAuthor();
+
+        $post = $data['post'];
 
         $res = $this->get(route('posts.index'));
         $res->assertSeeTextInOrder([
@@ -49,7 +49,8 @@ class PostsTest extends TestCase
             'content' => 'lorem ipsum dolore sit amet'
         ];
 
-        $this->post(route('posts.store'), $data)
+        $this->actingAs($this->getAuthor())
+            ->post(route('posts.store'), $data)
             ->assertStatus(302)
             ->assertSessionHas('status');
 
@@ -65,7 +66,8 @@ class PostsTest extends TestCase
             'content' => 'x'
         ];
 
-        $this->post(route('posts.store'), $data)
+        $this->actingAs($this->getAuthor())
+            ->post(route('posts.store'), $data)
             ->assertStatus(302)
             ->assertSessionHas('errors');
 
@@ -77,9 +79,12 @@ class PostsTest extends TestCase
 
     public function test_update_endpoint()
     {
+        $user = $this->getAuthor();
+
         $data = [
             'title' => 'new title',
-            'content' => 'some content'
+            'content' => 'some content',
+            'author_id' => $user->id
         ];
 
         $new_data = [
@@ -88,11 +93,11 @@ class PostsTest extends TestCase
         ];
 
         $post = Blogpost::create($data);
-        $post->setSlug()->save();
 
         $this->assertDatabaseHas('blogposts', $data);
 
-        $this->put(route('posts.update', ['post' => $post->slug]), $new_data)
+        $this->actingAs($user)
+            ->put(route('posts.update', ['post' => $post->slug]), $new_data)
             ->assertStatus(302)
             ->assertSessionHas('status');
 
@@ -103,21 +108,48 @@ class PostsTest extends TestCase
 
     public function test_delete_endpoint()
     {
+        $user = $this->getAuthor();
+
         $data = [
             'title' => 'new title',
-            'content' => 'some content'
+            'content' => 'some content',
+            'author_id' => $user->id
         ];
 
         $post = Blogpost::create($data);
-        $post->setSlug()->save();
+
 
         $this->assertDatabaseHas('blogposts', $data);
 
-        $this->delete(route('posts.destroy', ['post' => $post->slug]))
-        ->assertStatus(302)
-        ->assertSessionHas('status');
+        $this->actingAs($user)
+            ->delete(route('posts.destroy', ['post' => $post->slug]))
+            ->assertStatus(302)
+            ->assertSessionHas('status');
 
-        $this->assertDatabaseMissing('blogposts', $data);
+        $this->assertSoftDeleted('blogposts', $data);
+    }
+
+    private function getBlogpostWithAuthor()
+    {
+        $author = $this->getAuthor();
+
+        $post = Blogpost::factory()->make([
+            'title' => 'new title',
+            'content' => 'some content'
+        ]);
+
+        $post['author_id'] = $author['id'];
+        $post->save();
+
+        return [
+            'author' => $author,
+            'post' => $post
+        ];
+    }
+
+    private function getAuthor()
+    {
+        return Author::factory()->create();
     }
 
 }

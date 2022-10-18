@@ -20,13 +20,23 @@ class CommentsTableSeeder extends Seeder
         $posts = Blogpost::all();
         $authors = Author::all();
 
-        $comments = Comment::factory(150)->make()
+        if($authors->count() <= 0) {
+            $this->command->error('There is no Authors, so comments won\'t be added!');
+            return;
+        }
+
+        if($posts->count() <= 0) {
+            $this->command->error('There is no Posts, so comments won\'t be added!');
+            return;
+        }
+
+        $commentsCount = max((int) $this->command->ask('How many comments should be added?', 150), 0);
+
+        Comment::factory($commentsCount)->make()
         ->each(function($comment) use($posts, $authors) {
             $comment['author_id'] = $authors->random()['id'];
             $comment['blogpost_id'] = $posts->random()['id'];
             $comment->save();
         });
-
-
     }
 }

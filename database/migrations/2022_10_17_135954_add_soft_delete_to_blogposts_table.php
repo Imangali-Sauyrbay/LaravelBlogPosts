@@ -13,14 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('blogposts', function (Blueprint $table) {
-            $table->id();
-            $table->string('title')->default('');
-            $table->text('content')->default('');
-            $table->string('slug')->default('');
-            $table->timestamps();
-
-            $table->foreignIdFor('App\Models\Author', 'author_id');
+        Schema::table('blogposts', function (Blueprint $table) {
+            $table->softDeletes();
         });
     }
 
@@ -31,6 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('blogposts');
+        Schema::table('blogposts', function (Blueprint $table) {
+            $table->dropSoftDeletes();
+        });
     }
 };

@@ -13,10 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('profiles', function (Blueprint $table) {
+        Schema::create('comments', function (Blueprint $table) {
             $table->id();
+            $table->text('content');
             $table->timestamps();
-            $table->foreignIdFor('App\Models\Author', 'author_id')->constrained()->cascadeOnDelete();
+
+            $table->foreignIdFor('App\Models\Author', 'author_id')->constrained();
+            $table->foreignIdFor('App\Models\Blogpost', 'blogpost_id')->constrained();
         });
     }
 
@@ -27,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('profiles');
+        Schema::dropIfExists('comments');
     }
 };

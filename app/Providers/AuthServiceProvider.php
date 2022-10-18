@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Author;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -25,6 +26,14 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+
+        Gate::define('home.contact.secret', fn(Author $user) => $user->role->name == 'admin');
+
+
+        Gate::before(function(Author $user, $ability) {
+            if($user->role->name == 'admin') {
+                return true;
+            }
+        });
     }
 }

@@ -4,16 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use League\CommonMark\Normalizer\SlugNormalizer;
 
 class Blogpost extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'title',
         'content',
-        'slug'
+        'slug',
+        'author_id'
     ];
 
     public function getRouteKeyName()
@@ -39,5 +41,15 @@ class Blogpost extends Model
     public function comments()
     {
         return $this->hasMany(Comment::class);
+    }
+
+    public static function boot() {
+        parent::boot();
+
+        $setSlug = fn (Blogpost $post) => $post->setSlug();
+
+        static::creating($setSlug);
+        static::saving($setSlug);
+        static::updating($setSlug);
     }
 }

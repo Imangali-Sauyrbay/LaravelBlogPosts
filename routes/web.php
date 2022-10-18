@@ -14,4 +14,5 @@ Auth::routes();
 
 Route::get('/', 'HomeController@index')->name('root');
 Route::get('/contacts', 'HomeController@contacts')->name('contacts');
+Route::get('/secret', 'HomeController@secret')->name('secret')->can('home.contact.secret');
 Route::resource('posts', 'PostController');

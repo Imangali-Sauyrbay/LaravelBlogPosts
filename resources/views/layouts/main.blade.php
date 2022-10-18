@@ -9,15 +9,15 @@
     @yield('head')
 </head>
 <body>
-    <div class="d-flex flex-column flex-md-row justify-content-md-between align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
-        <h5 class="my-0 my-md-auto font-weight-normal">Laravel Blog</h5>
+    <div class="d-flex flex-column flex-md-row justify-content-md-around align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
+        <a href="{{ route('root') }}" class="text-dark text-decoration-none"><h5 class="my-0 my-md-auto font-weight-normal">Laravel Blog</h5></a>
         <nav class="my-2 my-md-0 mr-md-3">
             <a href="{{route('root')}}" class="p-2 text-dark">Main</a>
             <a href="{{route('contacts')}}" class="p-2 text-dark">Contacts</a>
             <a href="{{route('posts.index')}}" class="p-2 text-dark">Posts</a>
             <a href="{{route('posts.create')}}" class="p-2 text-dark">New Post</a>|
             @auth
-                <form method="POST" action="{{route('logout')}}">
+                <form method="POST" action="{{route('logout')}}" class="d-inline-block">
                     @csrf
                     <button type="submit" class="btn p-2 text-dark text-decoration-underline">Logout ({{ auth()->user()->name }})</button>
                 </form>

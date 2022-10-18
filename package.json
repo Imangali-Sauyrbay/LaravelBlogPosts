@@ -2,7 +2,9 @@
     "private": true,
     "scripts": {
         "dev": "vite",
-        "build": "vite build"
+        "build": "vite build",
+        "serve:start": "sudo ./../../../xampp start",
+        "serve:stop": "sudo ./../../../xampp stop"
     },
     "devDependencies": {
         "axios": "^0.25",

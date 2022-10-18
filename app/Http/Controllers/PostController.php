@@ -8,6 +8,7 @@ use App\Http\Requests\StorePostRequest;
 use DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Session;
+use Response;
 
 class PostController extends Controller
 {
@@ -35,12 +36,13 @@ class PostController extends Controller
     public function store(StorePostRequest $request)
     {
         $data = $request->validated();
-        $data['slug'] = Blogpost::getSlug($data['title']);
-        Blogpost::create($data);
+        $data['author_id'] = auth()->user()->id;
+
+        $post = Blogpost::create($data);
 
         Session::flash('status', 'new blogpost was created');
 
-        return redirect()->route('posts.show', ['post' => $data['slug']]);
+        return redirect()->route('posts.show', ['post' => $post['slug']]);
     }
 
     public function show($slug)
@@ -57,6 +59,7 @@ class PostController extends Controller
      */
     public function edit(Blogpost $post)
     {
+        $this->authorize('update', $post);
         return view('posts.edit', ['post' => $post]);
     }
 
@@ -71,15 +74,11 @@ class PostController extends Controller
     {
         $this->authorize('update', $post);
 
-        $data = $request->validated();
-        $data['slug'] = Blogpost::getSlug($data['title']);
-
-        $post->fill($data);
-        $post->save();
+        $post->fill($request->validated())->saveOrFail();
 
         Session::flash('status', 'blogpost was updated');
 
-        return redirect()->route('posts.show', ['post' => $data['slug']]);
+        return redirect()->route('posts.show', ['post' => $post['slug']]);
     }
 
     /**
@@ -90,6 +89,7 @@ class PostController extends Controller
      */
     public function destroy(Blogpost $post)
     {
+        $this->authorize('delete', $post);
         $post->deleteOrFail();
         return redirect()->route('posts.index')->with('status', 'deleted successfully!');
     }

@@ -17,13 +17,10 @@ class BlogpostFactory extends Factory
      */
     public function definition()
     {
-        $result = array();
-
-        $result['title'] = fake()->sentence(rand(6, 20));
-        $result['content'] = fake()->paragraphs(rand(1, 15), true);
-        $result['slug'] = Blogpost::getSlug($result['title']);
-
-        return $result;
+        return [
+            'title' => fake()->sentence(rand(6, 20)),
+            'content' => fake()->paragraphs(rand(1, 15), true)
+        ];
     }
 
     public function withFirstAuthor()
