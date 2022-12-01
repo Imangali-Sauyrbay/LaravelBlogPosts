@@ -15,6 +15,12 @@ class Role extends Model
         'name'
     ];
 
+    public static function isAdmin(int $role_id)
+    {
+        $admin = Role::where('name', 'admin')->first();
+        return $admin->id == $role_id;
+    }
+
     public function authors()
     {
         return $this->hasMany(Author::class);

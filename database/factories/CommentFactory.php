@@ -17,7 +17,8 @@ class CommentFactory extends Factory
     public function definition()
     {
         return [
-            'content' => fake()->sentence(random_int(3, 20))
+            'content' => fake()->sentence(random_int(3, 20)),
+            'created_at' => fake()->dateTimeBetween('-6 month')
         ];
     }
 }

@@ -2,13 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Blogpost;
-use App\Http\Requests\StorePostRequest;
-use DB;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Session;
-use Response;
+use App\Http\Requests\StorePostRequest;
+use App\Models\Author;
+use App\Models\Blogpost;
 
 class PostController extends Controller
 {
@@ -18,8 +15,13 @@ class PostController extends Controller
 
     public function index()
     {
-        $post = Blogpost::with(['comments', 'comments.author'])->orderBy('created_at', 'desc')->get();
-        return view('posts.index', ['posts' => $post]);
+        return view('posts.index',
+        [
+            'posts' => Blogpost::latest()->withCount('comments')->get(),
+            'most_commented_of_all_time' => Blogpost::mostCommented()->take(5)->get(),
+            'most_active_authors_of_all_time' => Author::withMostBlogposts()->take(5)->get(),
+            'most_active_authors_of_last_month' => Author::withMostBlogpostsLastMonth()->take(5)->get()
+        ]);
     }
 
     public function create()
@@ -48,6 +50,7 @@ class PostController extends Controller
     public function show($slug)
     {
         $post = Blogpost::with(['comments', 'comments.author'])->where('slug', '=', $slug)->first();
+        abort_if(is_null($post), 404);
         return view('posts.show', ['post' => $post]);
     }
 

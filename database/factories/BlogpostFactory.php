@@ -19,7 +19,8 @@ class BlogpostFactory extends Factory
     {
         return [
             'title' => fake()->sentence(rand(6, 20)),
-            'content' => fake()->paragraphs(rand(1, 15), true)
+            'content' => fake()->paragraphs(rand(1, 15), true),
+            'created_at' => fake()->dateTimeBetween('-6 month')
         ];
     }
 

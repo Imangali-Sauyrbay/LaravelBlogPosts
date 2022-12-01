@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\ShowDeletedToAdmin;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -40,10 +42,20 @@ class Blogpost extends Model
 
     public function comments()
     {
-        return $this->hasMany(Comment::class);
+        return $this->hasMany(Comment::class)->latest();
+    }
+
+    public function scopeLatest(Builder $query)
+    {
+        return $query->orderBy(static::CREATED_AT, 'desc');
+    }
+
+    public function scopeMostCommented(Builder $query) {
+        return $query->withCount('comments')->orderBy('comments_count', 'desc');
     }
 
     public static function boot() {
+        static::addGlobalScope(new ShowDeletedToAdmin);
         parent::boot();
 
         $setSlug = fn (Blogpost $post) => $post->setSlug();

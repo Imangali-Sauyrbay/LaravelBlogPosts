@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -39,6 +40,18 @@ class Author extends Authenticatable
     public function role()
     {
         return $this->belongsTo(Role::class);
+    }
+
+    public function scopeWithMostBlogposts(Builder $query)
+    {
+        return $query->withCount('blogposts')->orderBy('blogposts_count', 'desc');
+    }
+
+    public function scopeWithMostBlogpostsLastMonth(Builder $query)
+    {
+        return $query->withCount(['blogposts' => function (Builder $query) {
+           return $query->whereBetween(static::CREATED_AT, [now()->subMonth(), now()]);
+        }])->having('blogposts_count', '>=', 2)->orderBy('blogposts_count', 'desc');
     }
 
     public static function boot() {
