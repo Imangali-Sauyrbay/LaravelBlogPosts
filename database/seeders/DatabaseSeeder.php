@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Cache;
 
 class DatabaseSeeder extends Seeder
 {
@@ -19,9 +20,9 @@ class DatabaseSeeder extends Seeder
             $this->command->newLine(2);
             $this->command->info('DB was refreshed!');
             $this->command->newLine(2);
-
         }
 
+        Cache::tags(['blogpost'])->flush();
 
         $this->call([
             AuthorsTableSeeder::class,

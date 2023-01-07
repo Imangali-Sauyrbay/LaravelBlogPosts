@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Cache;
 use League\CommonMark\Normalizer\SlugNormalizer;
 
 class Blogpost extends Model
@@ -63,5 +64,8 @@ class Blogpost extends Model
         static::creating($setSlug);
         static::saving($setSlug);
         static::updating($setSlug);
+        static::updating(function(Blogpost $post) {
+            Cache::forget("blog-post-{$post->slug}");
+        });
     }
 }

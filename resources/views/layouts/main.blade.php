@@ -35,13 +35,9 @@
         @yield('main')
     </main>
 
-    <footer class="bg-light py-3 fixed-bottom border-top border-1 border-gray-800">
-        <div class="container d-flex justify-content-center text-muted">
-            <div class="text-center">
-                <p class="m-1">Laravel App Version: {{ App::version() }}</p>
-                <p class="m-1">PHP Version: {{ phpversion() }}</p>
-            </div>
-        </div>
+    <footer class="bg-light py-1 fixed-bottom border-top border-1 border-gray-800 text-center text-muted">
+        <span class="m-1">Laravel App Version: {{ App::version() }}</span> |
+        <span class="m-1">PHP Version: {{ phpversion() }}</span>
     </footer>
 
 
