@@ -2,35 +2,37 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PaginatePostRequest;
 use Illuminate\Support\Facades\Session;
 use App\Http\Requests\StorePostRequest;
 use App\Models\Author;
 use App\Models\Blogpost;
+use Illuminate\Http\Request;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Cache;
+
 
 class PostController extends Controller
 {
+    public static $perPage = 10;
+
     public function __construct() {
         $this->middleware('auth')->except(['index', 'show']);
     }
 
-    public function index()
+    public function index(PaginatePostRequest $request)
     {
-        $mostCommented = Cache::tags(['blogpost'])->remember('most_commented_of_all_time',
-        now()->addHour(), fn() => Blogpost::mostCommented()->take(5)->get());
 
-        $mostActiveAllTime = Cache::tags(['blogpost'])->remember('most_active_authors_of_all_time',
-        now()->addHour(), fn() => Author::withMostBlogposts()->take(5)->get());
+        if (!$request->withPagination(static::$perPage, Blogpost::query())) {
+            return $request->path;
+        }
 
-        $mostActiveLastMonth = Cache::tags(['blogpost'])->remember('most_active_authors_of_last_month',
-        now()->addHour(), fn() => Author::withMostBlogpostsLastMonth()->take(5)->get());
+        $posts = Cache::tags(['blogpost', 'posts'])->remember('page-' . $request->page,
+        now()->addSeconds(5), fn() => Blogpost::latest()->withRelations()->offset($request->offset)->limit(static::$perPage)->get());
 
         return view('posts.index',
         [
-            'posts' => Blogpost::latest()->withCount('comments')->with('author')->get(),
-            'most_commented_of_all_time' => $mostCommented,
-            'most_active_authors_of_all_time' => $mostActiveAllTime,
-            'most_active_authors_of_last_month' => $mostActiveLastMonth
+            'posts' => $posts
         ]);
     }
 
@@ -62,7 +64,7 @@ class PostController extends Controller
 
         $post = Cache::tags(['blogpost'])->remember("blog-post-{$slug}", 60,
         function() use($slug) {
-            return Blogpost::with(['comments', 'comments.author'])->where('slug', '=', $slug)->first();
+            return Blogpost::withRelations()->where('slug', '=', $slug)->first();
         });
 
         $sessionId = session()->getId();

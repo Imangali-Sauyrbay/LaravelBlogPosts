@@ -19,7 +19,7 @@
 		}
 
 		form > button {
-			margin-top: 15px; 
+			margin-top: 15px;
 			width: fit-content;
 			align-self: center;
 		}
@@ -52,7 +52,7 @@
 	--}}{{ old('content', $post->content) }}{{--
 	--}}</textarea>
 
-		@include('posts.components.error-list')
+		<x-errors>
 		<button type="submit" class="btn btn-outline-success">Save</button>
 	</form>
 	<form action="{{ route('posts.destroy', ['post' => $post->slug]) }}" method="POST">

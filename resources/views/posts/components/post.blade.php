@@ -10,6 +10,8 @@
             <x-updated :date="$post->created_at->diffForHumans()" :name="$post->author->name"/>
             <span>Comments ({{ $post->comments_count }})</span>
         </div>
+        <hr>
+        <x-tags :tags="$post->tags"/>
         @if (now()->diffInMinutes($post->created_at) < 15)
             <strong>NEW!</strong>
         @endif

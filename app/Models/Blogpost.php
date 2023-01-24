@@ -41,6 +41,11 @@ class Blogpost extends Model
         return $this->belongsTo(Author::class);
     }
 
+    public function tags()
+    {
+        return $this->belongsToMany('App\Models\Tag')->withTimestamps();
+    }
+
     public function comments()
     {
         return $this->hasMany(Comment::class)->latest();
@@ -49,6 +54,11 @@ class Blogpost extends Model
     public function scopeLatest(Builder $query)
     {
         return $query->orderBy(static::CREATED_AT, 'desc');
+    }
+
+    public function scopeWithRelations(Builder $query)
+    {
+        return $query->with(['comments', 'comments.author', 'tags', 'author']);
     }
 
     public function scopeMostCommented(Builder $query) {
@@ -64,8 +74,11 @@ class Blogpost extends Model
         static::creating($setSlug);
         static::saving($setSlug);
         static::updating($setSlug);
+        static::deleting(function(Blogpost $post) {
+            Cache::tags(['blogpost'])->forget("blog-post-{$post->slug}");
+        });
         static::updating(function(Blogpost $post) {
-            Cache::forget("blog-post-{$post->slug}");
+            Cache::tags(['blogpost'])->forget("blog-post-{$post->slug}");
         });
     }
 }

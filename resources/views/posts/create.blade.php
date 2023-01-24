@@ -19,7 +19,7 @@
 		}
 
 		form > button {
-			margin-top: 15px; 
+			margin-top: 15px;
 			width: fit-content;
 			align-self: center;
 		}
@@ -37,7 +37,7 @@
 		@csrf
 		<input class="form-control" type="text" name="title" placeholder="Title" value="{{ old('title') }}">
 		<textarea class="form-control" name="content" cols="30" rows="10" placeholder="Content">{{ old('content') }}</textarea>
-		@include('posts.components.error-list')
+		<x-errors />
 		<button class="btn btn-primary" type="submit">Create</button>
 	</form>
 @endsection

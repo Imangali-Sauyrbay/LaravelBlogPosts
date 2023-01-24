@@ -28,5 +28,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Blade::component('components.updated', 'updated');
         Blade::component('components.card', 'card-aside');
+        Blade::component('components.tags', 'tags');
+        Blade::component('components.error-list', 'errors');
     }
 }
