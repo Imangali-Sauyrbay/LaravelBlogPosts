@@ -6,30 +6,37 @@ use App\Models\Blogpost;
 use Illuminate\Http\Request;
 use App\Http\Requests\PaginatePostRequest;
 use App\Models\Tag;
+use App\Traits\PaginationTrait;
 use Illuminate\Support\Facades\Cache;
 
 class PostTagController extends Controller
 {
+    use PaginationTrait;
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(PaginatePostRequest $request,string $slug)
+    public function index(string $slug)
     {
-        if (!$request->withPagination(PostController::$perPage,
-        Blogpost::whereHas('tags', function($query) use ($slug) {$query->where('tags.slug', $slug);}), "-tag-$slug")) {
-            return $request->path;
+        $countQuery = Blogpost::whereHas('tags', function($query) use ($slug) {
+            $query->where('tags.slug', $slug);
+        });
+
+        if($redirect = $this->paginate($countQuery, ['blogpost', 'posts-count', 'tag'], "-tag-$slug"))
+        {
+            return $redirect;
         }
 
-        $posts = Cache::tags(['blogpost', 'posts', 'tags'])->remember('tag-' . $slug . '-page-' . $request->page,
-        now()->addSeconds(10), fn() => Tag::where('slug', $slug)->first()
-        ->blogposts()
-        ->withRelations()
-        ->latest()
-        ->withCount('comments')
-        ->limit(PostController::$perPage)
-        ->offset($request->offset)->get());
+
+        $posts = Cache::tags(['blogpost', 'posts', 'tags'])->remember('tag-' . $slug . '-page-' . $this->page,
+        now()->addSeconds(10), fn() => $this->getPaginatedRecords(
+            Tag::where('slug', $slug)
+            ->first()
+            ->blogposts()
+            ->withRelCommCountLatest()
+            ->getQuery()
+        ));
 
         return view('posts.index',
         [

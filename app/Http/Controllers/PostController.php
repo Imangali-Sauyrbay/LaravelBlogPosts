@@ -2,33 +2,33 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\PaginatePostRequest;
-use Illuminate\Support\Facades\Session;
-use App\Http\Requests\StorePostRequest;
-use App\Models\Author;
 use App\Models\Blogpost;
-use Illuminate\Http\Request;
-use Illuminate\Pagination\Paginator;
+use App\Traits\PaginationTrait;
 use Illuminate\Support\Facades\Cache;
+use App\Http\Requests\StorePostRequest;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Session;
 
 
 class PostController extends Controller
 {
-    public static $perPage = 10;
+    use PaginationTrait;
 
     public function __construct() {
         $this->middleware('auth')->except(['index', 'show']);
     }
 
-    public function index(PaginatePostRequest $request)
+    public function index()
     {
-
-        if (!$request->withPagination(static::$perPage, Blogpost::query())) {
-            return $request->path;
+        if($redirect = $this->paginate(Blogpost::query())) {
+            return $redirect;
         }
 
-        $posts = Cache::tags(['blogpost', 'posts'])->remember('page-' . $request->page,
-        now()->addSeconds(5), fn() => Blogpost::latest()->withRelations()->offset($request->offset)->limit(static::$perPage)->get());
+        $posts = Cache::tags(['blogpost', 'posts'])
+        ->remember('page-' . $this->page,
+            now()->addSeconds(5),
+            fn() => $this->getPaginatedRecords(Blogpost::withRelCommCountLatest())
+        );
 
         return view('posts.index',
         [

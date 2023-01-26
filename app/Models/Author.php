@@ -7,6 +7,46 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
+/**
+ * App\Models\Author
+ *
+ * @property int $id
+ * @property string $name
+ * @property string $email
+ * @property string|null $email_verified_at
+ * @property string $password
+ * @property string|null $remember_token
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property int $role_id
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Blogpost[] $blogposts
+ * @property-read int|null $blogposts_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Comment[] $comments
+ * @property-read int|null $comments_count
+ * @property-read \App\Models\Profile|null $profile
+ * @property-read \App\Models\Role $role
+ * @method static \Database\Factories\AuthorFactory factory(...$parameters)
+ * @method static Builder|Author newModelQuery()
+ * @method static Builder|Author newQuery()
+ * @method static \Illuminate\Database\Query\Builder|Author onlyTrashed()
+ * @method static Builder|Author query()
+ * @method static Builder|Author whereCreatedAt($value)
+ * @method static Builder|Author whereDeletedAt($value)
+ * @method static Builder|Author whereEmail($value)
+ * @method static Builder|Author whereEmailVerifiedAt($value)
+ * @method static Builder|Author whereId($value)
+ * @method static Builder|Author whereName($value)
+ * @method static Builder|Author wherePassword($value)
+ * @method static Builder|Author whereRememberToken($value)
+ * @method static Builder|Author whereRoleId($value)
+ * @method static Builder|Author whereUpdatedAt($value)
+ * @method static Builder|Author withMostBlogposts()
+ * @method static Builder|Author withMostBlogpostsLastMonth()
+ * @method static \Illuminate\Database\Query\Builder|Author withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|Author withoutTrashed()
+ * @mixin \Eloquent
+ */
 class Author extends Authenticatable
 {
     use HasFactory, SoftDeletes;
