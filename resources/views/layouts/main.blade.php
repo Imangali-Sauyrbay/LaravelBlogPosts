@@ -15,7 +15,8 @@
             <a href="{{route('root')}}" class="p-2 text-dark">Main</a>
             <a href="{{route('contacts')}}" class="p-2 text-dark">Contacts</a>
             <a href="{{route('posts.index')}}" class="p-2 text-dark">Posts</a>
-            <a href="{{route('posts.create')}}" class="p-2 text-dark">New Post</a>|
+            <a href="{{route('posts.create')}}" class="p-2 text-dark">New Post</a>
+            <span class="m-0">|</span>
             @auth
                 <form method="POST" action="{{route('logout')}}" class="d-inline-block">
                     @csrf
@@ -29,9 +30,10 @@
     </div>
 
     <main class="container">
-         @if (session()->has('status'))
+        @if(session()->has('status'))
             <h5 id="status" style="text-align: center; color: lightgreen;">{{ session()->get('status') }}</h5>
         @endif
+
         @yield('main')
     </main>
 

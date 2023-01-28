@@ -33,31 +33,33 @@
 @endsection
 
 @section('main')
-	<form method="POST" action="{{ route('posts.update', ['post' => $post->slug]) }}">
-		@csrf
-		@method('put')
-		<input
-		class="form-control"
-		type="text"
-		name="title"
-		placeholder="Title"
-		value="{{ old('title', $post->title) }}">
+<form method="POST" action="{{ route('posts.update', ['post' => $post->slug]) }}" enctype="multipart/form-data">
+    @csrf
+    @method('put')
+    <input
+    class="form-control"
+    type="text"
+    name="title"
+    placeholder="Title"
+    value="{{ old('title', $post->title) }}">
 
-		<textarea
-		class="form-control"
-		name="content"
-		cols="30"
-		rows="10"
-		placeholder="Content">{{--
-	--}}{{ old('content', $post->content) }}{{--
-	--}}</textarea>
+    <textarea
+    class="form-control"
+    name="content"
+    cols="30"
+    rows="10"
+    placeholder="Content">{{ old('content', $post->content) }}</textarea>
 
-		<x-errors>
-		<button type="submit" class="btn btn-outline-success">Save</button>
-	</form>
-	<form action="{{ route('posts.destroy', ['post' => $post->slug]) }}" method="POST">
-		@csrf
-		@method('DELETE')
-		<button type="submit" class="btn btn-danger">Delete Post</button>
-	</form>
+    @include('posts.components._input_file')
+
+    <x-errors />
+    <button type="submit" class="btn btn-outline-success">Save</button>
+</form>
+
+<form action="{{ route('posts.destroy', ['post' => $post->slug]) }}" method="POST">
+    @csrf
+    @method('DELETE')
+    <button type="submit" class="btn btn-danger">Delete Post</button>
+</form>
+
 @endsection

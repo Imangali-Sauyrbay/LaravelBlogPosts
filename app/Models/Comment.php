@@ -62,8 +62,8 @@ class Comment extends Model
         parent::boot();
 
         static::creating(function(Comment $comment) {
-            Cache::tags(['blogpost'])->forget("blog-post-{$comment->blogpost->slug}");
-            Cache::tags(['blogpost'])->forget('most_commented_of_all_time');
+            Cache::tags(['blogpost', 'side_bar'])->forget("blog-post-{$comment->blogpost->slug}");
+            Cache::tags(['blogpost', 'side_bar'])->forget('most_commented_of_all_time');
         });
     }
 }

@@ -88,6 +88,11 @@ class Blogpost extends Model
         return $this->hasMany(Comment::class)->latest();
     }
 
+    public function image()
+    {
+        return $this->hasOne(Image::class);
+    }
+
     public function scopeLatest(Builder $query)
     {
         return $query->orderBy(static::CREATED_AT, 'desc');
@@ -115,12 +120,16 @@ class Blogpost extends Model
 
         static::creating($setSlug);
         static::saving($setSlug);
-        static::updating($setSlug);
+
         static::deleting(function(Blogpost $post) {
             Cache::tags(['blogpost'])->forget("blog-post-{$post->slug}");
+            Cache::tags(['blogpost', 'side_bar'])->flush();
         });
+
         static::updating(function(Blogpost $post) {
+            $post->setSlug();
             Cache::tags(['blogpost'])->forget("blog-post-{$post->slug}");
+            Cache::tags(['blogpost', 'side_bar'])->flush();
         });
     }
 }

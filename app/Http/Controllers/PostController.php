@@ -6,9 +6,10 @@ use App\Models\Blogpost;
 use App\Traits\PaginationTrait;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Requests\StorePostRequest;
+use App\Models\Image;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Session;
-
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -53,6 +54,13 @@ class PostController extends Controller
         $data['author_id'] = auth()->user()->id;
 
         $post = Blogpost::create($data);
+
+        if ($request->hasFile('thumbnail')) {
+            $path = $request->file('thumbnail')->store('thumbnails');
+            $post->image()->save(
+                Image::create(['path' => $path])
+            );
+        }
 
         Session::flash('status', 'new blogpost was created');
 
@@ -130,6 +138,19 @@ class PostController extends Controller
         $this->authorize('update', $post);
 
         $post->fill($request->validated())->saveOrFail();
+
+        if ($request->hasFile('thumbnail')) {
+            $path = $request->file('thumbnail')->store('thumbnails');
+
+            if(isset($post->image)) {
+                Storage::delete($post->image->path);
+                $post->image->delete();
+            }
+
+            $post->image()->save(
+                Image::create(['path' => $path])
+            );
+        }
 
         Session::flash('status', 'blogpost was updated');
 

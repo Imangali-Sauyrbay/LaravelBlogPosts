@@ -33,11 +33,12 @@
 @endsection
 
 @section('main')
-	<form method="POST" action="{{ route('posts.store') }}">
+	<form method="POST" action="{{ route('posts.store') }}" enctype="multipart/form-data">
 		@csrf
 		<input class="form-control" type="text" name="title" placeholder="Title" value="{{ old('title') }}">
 		<textarea class="form-control" name="content" cols="30" rows="10" placeholder="Content">{{ old('content') }}</textarea>
-		<x-errors />
+        @include('posts.components._input_file')
+        <x-errors />
 		<button class="btn btn-primary" type="submit">Create</button>
 	</form>
 @endsection

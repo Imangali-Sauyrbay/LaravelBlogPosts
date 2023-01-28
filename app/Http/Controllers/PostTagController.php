@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Blogpost;
 use Illuminate\Http\Request;
-use App\Http\Requests\PaginatePostRequest;
 use App\Models\Tag;
 use App\Traits\PaginationTrait;
 use Illuminate\Support\Facades\Cache;
