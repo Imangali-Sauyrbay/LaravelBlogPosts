@@ -10,11 +10,11 @@ class Image extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['path', 'blogpost_id'];
+    protected $fillable = ['path'];
 
-    public function blogpost()
+    public function imageable()
     {
-        return $this->belongsTo(Blogpost::class);
+        return $this->morphTo();
     }
 
     public function url()

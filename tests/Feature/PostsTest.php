@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Author;
 use App\Models\Blogpost;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -14,12 +15,12 @@ class PostsTest extends TestCase
 
     public function test_posts_page_is_responding_correctly()
     {
-        $this->get(route('posts.index'))->assertStatus(200);
+        $this->get(route('posts.index', ['page' => 1]))->assertStatus(200);
     }
 
     public function test_message_if_there_no_posts()
     {
-        $response = $this->get(route('posts.index'));
+        $response = $this->get(route('posts.index', ['page' => 1]));
         $response->assertSeeText('Nothing posted yet!');
     }
 
@@ -30,7 +31,7 @@ class PostsTest extends TestCase
 
         $post = $data['post'];
 
-        $res = $this->get(route('posts.index'));
+        $res = $this->get(route('posts.index', ['page' => 1]));
         $res->assertSeeTextInOrder([
             $post['title'],
             $post['content']
@@ -149,7 +150,8 @@ class PostsTest extends TestCase
 
     private function getAuthor()
     {
-        return Author::factory()->create();
+        Author::factory()->create();
+        return Author::all()->first();
     }
 
 }

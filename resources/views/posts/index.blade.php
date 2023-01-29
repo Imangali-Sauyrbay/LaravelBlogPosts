@@ -6,6 +6,7 @@
             @isset($tag_name)
                 <h4>{{ $tag_name }}</h4>
             @endisset
+
             @each('posts.components.post', $posts, 'post', 'posts.components.empty')
         </div>
 

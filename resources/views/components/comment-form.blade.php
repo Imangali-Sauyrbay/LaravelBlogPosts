@@ -1,6 +1,6 @@
 <div class="my-2">
     @auth
-        <form method="POST" action="{{ route('posts.comments.store', ['post' => $post->slug]) }}" class="d-flex flex-column align-items-start justify-content-center">
+        <form method="POST" action="{{ $route }}" class="d-flex flex-column align-items-start justify-content-center">
             @csrf
             <textarea class="form-control" name="comment" cols="5" rows="3" placeholder="Comment">{{ old('comment') }}</textarea>
             <x-errors />

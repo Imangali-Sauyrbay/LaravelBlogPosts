@@ -7,6 +7,37 @@
     <title>Main</title>
     @vite(['resources/js/app.js', 'resources/css/app.css'])
     @yield('head')
+    <style>
+        .avatar {
+            border-radius: 50%;
+        }
+
+        .avatar-fluid {
+            width: 100%;
+            height: auto;
+        }
+
+        .avatar-lg {
+            width: 256px;
+            height: 256px;
+        }
+
+        .avatar-md{
+            width: 128px;
+            height: 128px;
+        }
+
+        .avatar-sm-md {
+            width: 96px;
+            height: 96px;
+        }
+
+        .avatar-sm {
+            width: 64px;
+            height: 64px;
+        }
+
+    </style>
 </head>
 <body>
     <div class="d-flex flex-column flex-md-row justify-content-md-around align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
@@ -37,10 +68,12 @@
         @yield('main')
     </main>
 
-    <footer class="bg-light py-1 fixed-bottom border-top border-1 border-gray-800 text-center text-muted">
-        <span class="m-1">Laravel App Version: {{ App::version() }}</span> |
-        <span class="m-1">PHP Version: {{ phpversion() }}</span>
-    </footer>
+    @if (config('app.debug'))
+        <footer class="bg-light py-1 fixed-bottom border-top border-1 border-gray-800 text-center text-muted">
+            <span class="m-1">Laravel App Version: {{ App::version() }}</span> |
+            <span class="m-1">PHP Version: {{ phpversion() }}</span>
+        </footer>
+    @endif
 
 
     @yield('scripts')

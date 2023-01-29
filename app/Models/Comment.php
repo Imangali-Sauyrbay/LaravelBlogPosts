@@ -39,12 +39,11 @@ class Comment extends Model
     protected $fillable = [
         'content',
         'author_id',
-        'blogpost_id',
     ];
 
-    public function blogpost()
+    public function commentable()
     {
-        return $this->belongsTo(Blogpost::class);
+        return $this->morphTo();
     }
 
     public function author()
@@ -62,8 +61,11 @@ class Comment extends Model
         parent::boot();
 
         static::creating(function(Comment $comment) {
-            Cache::tags(['blogpost', 'side_bar'])->forget("blog-post-{$comment->blogpost->slug}");
-            Cache::tags(['blogpost', 'side_bar'])->forget('most_commented_of_all_time');
+            if($comment->commentable_type == Blogpost::class) {
+                $post = Blogpost::find($comment->commentable_id);
+                Cache::tags(['blogpost'])->forget("blog-post-{$post->slug}");
+                Cache::tags(['blogpost', 'side_bar'])->forget('most_commented_of_all_time');
+            }
         });
     }
 }

@@ -4,12 +4,22 @@ namespace App\Policies;
 
 use App\Models\Author;
 use App\Models\Blogpost;
-use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Auth\Access\Response;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
-class PostPolicy
+class BlogpostPolicy
 {
     use HandlesAuthorization;
+
+    /**
+     * Create a new policy instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        //
+    }
 
     public function update(Author $user, Blogpost $post)
     {

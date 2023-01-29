@@ -16,5 +16,9 @@ Route::get('/', 'HomeController@index')->name('root');
 Route::get('/contacts', 'HomeController@contacts')->name('contacts');
 Route::get('/secret', 'HomeController@secret')->name('secret')->can('home.contact.secret');
 Route::get('/posts/tags/{slug}', 'PostTagController@index')->name('posts.tags.index');
+
+Route::resource('authors', 'AuthorController')->only(['show', 'edit', 'update']);
+Route::resource('authors.comments', 'AuthorCommentController')->only(['store']);
+
 Route::resource('posts', 'PostController');
 Route::resource('posts.comments', 'PostCommentController')->only(['store']);

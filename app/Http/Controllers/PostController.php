@@ -7,6 +7,7 @@ use App\Traits\PaginationTrait;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Requests\StorePostRequest;
 use App\Models\Image;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
@@ -58,7 +59,7 @@ class PostController extends Controller
         if ($request->hasFile('thumbnail')) {
             $path = $request->file('thumbnail')->store('thumbnails');
             $post->image()->save(
-                Image::create(['path' => $path])
+                Image::make(['path' => $path])
             );
         }
 
@@ -148,7 +149,7 @@ class PostController extends Controller
             }
 
             $post->image()->save(
-                Image::create(['path' => $path])
+                Image::make(['path' => $path])
             );
         }
 

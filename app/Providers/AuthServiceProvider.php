@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Author;
+use App\Policies\AuthorPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -14,7 +15,8 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        'App\Models\Blogpost' => 'App\Policies\PostPolicy',
+        'App\Models\Blogpost' => 'App\Policies\BlogpostPolicy',
+        Author::class => AuthorPolicy::class,
     ];
 
     /**
@@ -28,7 +30,6 @@ class AuthServiceProvider extends ServiceProvider
 
 
         Gate::define('home.contact.secret', fn(Author $user) => $user->role->name == 'admin');
-
 
         Gate::before(function(Author $user, $ability) {
             if($user->role->name == 'admin') {

@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use App\Models\Tag;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-
+use League\CommonMark\Normalizer\SlugNormalizer;
 
 class TagsTableSeeder extends Seeder
 {
@@ -27,9 +27,12 @@ class TagsTableSeeder extends Seeder
             'Blog'
         ]);
 
-        $tags->each(function($name) {
+        $slugNormalizer = new SlugNormalizer;
+
+        $tags->each(function($name) use ($slugNormalizer) {
             $tag = new Tag();
             $tag->name = $name;
+            $tag->slug = $slugNormalizer->normalize($name);
             $tag->save();
         });
     }

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * App\Models\Author
@@ -77,9 +78,24 @@ class Author extends Authenticatable
         return $this->hasMany(Comment::class);
     }
 
+    public function commentsOn()
+    {
+        return $this->morphMany(Comment::class, 'commentable')->latest();
+    }
+
     public function role()
     {
         return $this->belongsTo(Role::class);
+    }
+
+    public function image()
+    {
+        return $this->morphOne(Image::class, 'imageable');
+    }
+
+    public function defaultImageUrl()
+    {
+        return Storage::url('avatars/default.png');
     }
 
     public function scopeWithMostBlogposts(Builder $query)

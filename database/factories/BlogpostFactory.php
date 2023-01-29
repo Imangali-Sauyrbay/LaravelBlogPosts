@@ -18,7 +18,7 @@ class BlogpostFactory extends Factory
     public function definition()
     {
         return [
-            'title' => fake()->sentence(rand(6, 20)),
+            'title' => mb_strcut(fake()->sentence(rand(6, 10)), 0, 190),
             'content' => fake()->paragraphs(rand(1, 15), true),
             'created_at' => fake()->dateTimeBetween('-6 month')
         ];

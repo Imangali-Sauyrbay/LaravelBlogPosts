@@ -35,7 +35,16 @@ class CommentsTableSeeder extends Seeder
         Comment::factory($commentsCount)->make()
         ->each(function($comment) use($posts, $authors) {
             $comment['author_id'] = $authors->random()['id'];
-            $comment['blogpost_id'] = $posts->random()['id'];
+            $comment['commentable_id'] = $posts->random()['id'];
+            $comment['commentable_type'] = Blogpost::class;
+            $comment->save();
+        });
+
+        Comment::factory($commentsCount)->make()
+        ->each(function($comment) use($authors) {
+            $comment['author_id'] = $authors->random()['id'];
+            $comment['commentable_id'] = $authors->random()['id'];
+            $comment['commentable_type'] = Author::class;
             $comment->save();
         });
     }

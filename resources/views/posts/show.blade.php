@@ -31,8 +31,8 @@
             <hr>
             <div>
                 <h4>Comments ({{ $post->comments->count()}})</h4>
-                @include('comment._form')
-                @each('posts.components.comment', $post->comments, 'comment', 'posts.components.empty_comment')
+                <x-comment-form :route="route('posts.comments.store', ['post' => $post->slug])"/>
+                <x-comments-list :comments="$post->comments" :size="'sm-md'"/>
             </div>
         </div>
 
