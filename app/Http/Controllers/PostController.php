@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Image;
 use App\Models\Blogpost;
 use App\Traits\PaginationTrait;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Requests\StorePostRequest;
-use App\Models\Image;
-use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 
@@ -32,9 +31,12 @@ class PostController extends Controller
             fn() => $this->getPaginatedRecords(Blogpost::withRelCommCountLatest())
         );
 
+        Blogpost::hideTags($posts);
+
         return view('posts.index',
         [
-            'posts' => $posts
+            'posts' => $posts,
+            'links' => $this->getPaginatorLinks()
         ]);
     }
 
@@ -77,6 +79,8 @@ class PostController extends Controller
         });
 
         $sessionId = session()->getId();
+
+        Blogpost::hideTags([$post]);
 
         $counterKey = "blogpost-{$slug}-counter";
         $usersKey = "blogpost-{$slug}-users";

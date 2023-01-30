@@ -6,7 +6,7 @@
             <div style="display: flex; padding: 15px; align-items: center; flex-direction: column; border: 1px solid #ccc; position: relative;">
 
                 @if (isset($post->image))
-                    <div style="background-image: url({{ $post->image->url() }}); min-height: 20rem; color: white; text-align:center; background-attachment: fixed; background-size:contain; background-repeat: no-repeat; padding: 10px; margin-bottom: 20px">
+                    <div style="width: 100%; background-image: url({{ $post->image->url() }}); min-height: 20rem; color: white; text-align:center; background-attachment: fixed; background-size:contain; background-repeat: no-repeat; padding: 10px; margin-bottom: 20px">
                         <h1 style="padding-top: 2rem; text-shadow: 1px 2px black;">{{ $post->title }}</h1>
                     </div>
                 @else

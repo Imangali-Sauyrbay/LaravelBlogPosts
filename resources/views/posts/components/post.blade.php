@@ -1,7 +1,7 @@
 <div style="display: flex; padding: 10px; margin-bottom: 15px; flex-direction: column; border: 1px solid #ccc">
     <a
     href="{{ route('posts.show', ['post' => $post->slug]) }}"
-    class="{{ $post->trashed() ? 'text-muted' : '' }}"
+    class="{{ $post->trashed() ? 'text-muted' : '' }}"s
     style="color: black; text-decoration: none;">
 
         <h4 style="margin: 3px">{{ $post->title }}</h4>

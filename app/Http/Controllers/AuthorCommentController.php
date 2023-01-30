@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Author;
 use Illuminate\Support\Facades\Session;
 use App\Http\Requests\StoreCommentRequest;
+use App\Mail\ProfileCommented;
+use Illuminate\Support\Facades\Mail;
 
 class AuthorCommentController extends Controller
 {
@@ -22,11 +24,12 @@ class AuthorCommentController extends Controller
      */
     public function store(Author $author, StoreCommentRequest $request)
     {
-        $author->commentsOn()->create([
+        $comment = $author->commentsOn()->create([
             'content' => $request->input('comment'),
             'author_id' => $request->user()->id,
         ]);
 
+        Mail::to($author)->queue(new ProfileCommented($comment));
         return redirect()->back()->withStatus('Comment was added!');
     }
 }

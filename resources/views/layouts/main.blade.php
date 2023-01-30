@@ -68,12 +68,12 @@
         @yield('main')
     </main>
 
-    @if (config('app.debug'))
+    {{-- @if (config('app.debug'))
         <footer class="bg-light py-1 fixed-bottom border-top border-1 border-gray-800 text-center text-muted">
             <span class="m-1">Laravel App Version: {{ App::version() }}</span> |
             <span class="m-1">PHP Version: {{ phpversion() }}</span>
         </footer>
-    @endif
+    @endif --}}
 
 
     @yield('scripts')

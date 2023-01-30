@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\TaggableTrait;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
@@ -34,7 +35,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  */
 class Comment extends Model
 {
-    use HasFactory;
+    use HasFactory, TaggableTrait;
 
     protected $fillable = [
         'content',

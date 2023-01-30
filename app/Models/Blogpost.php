@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Scopes\ShowDeletedToAdmin;
+use App\Traits\TaggableTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -49,7 +50,7 @@ use League\CommonMark\Normalizer\SlugNormalizer;
  */
 class Blogpost extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, TaggableTrait;
 
     protected $fillable = [
         'title',
@@ -76,11 +77,6 @@ class Blogpost extends Model
     public function author()
     {
         return $this->belongsTo(Author::class);
-    }
-
-    public function tags()
-    {
-        return $this->belongsToMany('App\Models\Tag')->withTimestamps();
     }
 
     public function comments()

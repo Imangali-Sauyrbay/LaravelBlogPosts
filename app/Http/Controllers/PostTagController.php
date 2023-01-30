@@ -37,10 +37,13 @@ class PostTagController extends Controller
             ->getQuery()
         ));
 
+        Blogpost::hideTags($posts);
+
         return view('posts.index',
         [
             'posts' => $posts,
-            'tag_name' => Cache::tags(['blogpost', 'posts', 'tags'])->remember('tag-' . $slug . '-name', now()->addMinute(), fn() => Tag::where('slug', $slug)->first()->name)
+            'tag_name' => Cache::tags(['blogpost', 'posts', 'tags'])->remember('tag-' . $slug . '-name', now()->addMinute(), fn() => Tag::where('slug', $slug)->first()->name),
+            'links' => $this->getPaginatorLinks(true)
         ]);
     }
 
