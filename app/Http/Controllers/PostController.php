@@ -59,7 +59,7 @@ class PostController extends Controller
         $post = Blogpost::create($data);
 
         if ($request->hasFile('thumbnail')) {
-            $path = $request->file('thumbnail')->store('thumbnails');
+            $path = $request->file('thumbnail')->store('thumbnails', 'public');
             $post->image()->save(
                 Image::make(['path' => $path])
             );

@@ -10,44 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
 /**
- * App\Models\Author
- *
- * @property int $id
- * @property string $name
- * @property string $email
- * @property string|null $email_verified_at
- * @property string $password
- * @property string|null $remember_token
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property int $role_id
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Blogpost[] $blogposts
- * @property-read int|null $blogposts_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Comment[] $comments
- * @property-read int|null $comments_count
- * @property-read \App\Models\Profile|null $profile
- * @property-read \App\Models\Role $role
- * @method static \Database\Factories\AuthorFactory factory(...$parameters)
- * @method static Builder|Author newModelQuery()
- * @method static Builder|Author newQuery()
- * @method static \Illuminate\Database\Query\Builder|Author onlyTrashed()
- * @method static Builder|Author query()
- * @method static Builder|Author whereCreatedAt($value)
- * @method static Builder|Author whereDeletedAt($value)
- * @method static Builder|Author whereEmail($value)
- * @method static Builder|Author whereEmailVerifiedAt($value)
- * @method static Builder|Author whereId($value)
- * @method static Builder|Author whereName($value)
- * @method static Builder|Author wherePassword($value)
- * @method static Builder|Author whereRememberToken($value)
- * @method static Builder|Author whereRoleId($value)
- * @method static Builder|Author whereUpdatedAt($value)
- * @method static Builder|Author withMostBlogposts()
- * @method static Builder|Author withMostBlogpostsLastMonth()
- * @method static \Illuminate\Database\Query\Builder|Author withTrashed()
- * @method static \Illuminate\Database\Query\Builder|Author withoutTrashed()
- * @mixin \Eloquent
+ * @mixin IdeHelperAuthor
  */
 class Author extends Authenticatable
 {
@@ -96,7 +59,12 @@ class Author extends Authenticatable
 
     public function defaultImageUrl()
     {
-        return Storage::url('avatars/default.png');
+        return Storage::url('default-avatar.png');
+    }
+
+    public function defaultImagePath()
+    {
+        return Storage::drive('public')->path('default-avatar.png');
     }
 
     public function scopeWithMostBlogposts(Builder $query)
@@ -106,9 +74,17 @@ class Author extends Authenticatable
 
     public function scopeWithMostBlogpostsLastMonth(Builder $query)
     {
-        return $query->withCount(['blogposts' => function (Builder $query) {
-           return $query->whereBetween(static::CREATED_AT, [now()->subMonth(), now()]);
-        }])->having('blogposts_count', '>=', 2)->orderBy('blogposts_count', 'desc');
+        $filterFunction = function ($query) {
+            $startDate = now()->subMonth();
+            $endDate = now();
+
+            $query->whereBetween('created_at', [$startDate, $endDate])
+                  ->whereNull('deleted_at');
+        };
+
+        return $query->whereHas('blogposts', $filterFunction, '>=', 2)
+        ->withCount(['blogposts' => $filterFunction])
+        ->orderBy('blogposts_count', 'desc');
     }
 
     public static function boot() {

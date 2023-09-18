@@ -12,41 +12,7 @@ use Illuminate\Support\Facades\Cache;
 use League\CommonMark\Normalizer\SlugNormalizer;
 
 /**
- * App\Models\Blogpost
- *
- * @property int $id
- * @property string $title
- * @property string $content
- * @property string $slug
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property int $author_id
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property-read \App\Models\Author $author
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Comment[] $comments
- * @property-read int|null $comments_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Tag[] $tags
- * @property-read int|null $tags_count
- * @method static \Database\Factories\BlogpostFactory factory(...$parameters)
- * @method static Builder|Blogpost latest()
- * @method static Builder|Blogpost mostCommented()
- * @method static Builder|Blogpost newModelQuery()
- * @method static Builder|Blogpost newQuery()
- * @method static \Illuminate\Database\Query\Builder|Blogpost onlyTrashed()
- * @method static Builder|Blogpost query()
- * @method static Builder|Blogpost whereAuthorId($value)
- * @method static Builder|Blogpost whereContent($value)
- * @method static Builder|Blogpost whereCreatedAt($value)
- * @method static Builder|Blogpost whereDeletedAt($value)
- * @method static Builder|Blogpost whereId($value)
- * @method static Builder|Blogpost whereSlug($value)
- * @method static Builder|Blogpost whereTitle($value)
- * @method static Builder|Blogpost whereUpdatedAt($value)
- * @method static Builder|Blogpost withRelCommCoutLatest()
- * @method static Builder|Blogpost withRelations()
- * @method static \Illuminate\Database\Query\Builder|Blogpost withTrashed()
- * @method static \Illuminate\Database\Query\Builder|Blogpost withoutTrashed()
- * @mixin \Eloquent
+ * @mixin IdeHelperBlogpost
  */
 class Blogpost extends Model
 {

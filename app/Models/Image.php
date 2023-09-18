@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 
+/**
+ * @mixin IdeHelperImage
+ */
 class Image extends Model
 {
     use HasFactory;
@@ -20,5 +23,10 @@ class Image extends Model
     public function url()
     {
         return Storage::url($this->path);
+    }
+
+    public function absolutePath()
+    {
+        return Storage::drive('public')->path($this->path);
     }
 }

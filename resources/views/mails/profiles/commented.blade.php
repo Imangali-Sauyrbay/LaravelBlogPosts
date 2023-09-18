@@ -4,8 +4,10 @@
     }
 
     .avatar {
-        width: 96px;
-        height: 96px;
+        width: 100px;
+        height: 100px;
+        max-width: 100px;
+        max-height: 100px;
         border: 2px #ccc solid;
         border-radius: 50%;
     }
@@ -41,7 +43,7 @@
 <hr/>
 
 <div class="comment-container">
-    <img class="avatar" src="{{ $message->embed($comment->author->image->url()) }}"/>
+    <img class="avatar" src="{{ $message->embed($comment->author->image ? $comment->author->image->absolutePath() : $comment->author->defaultImagePath()) }}"/>
 
     <div class="comment">
         <a href="{{ route('authors.show', ['author' => $comment->author->id]) }}">
